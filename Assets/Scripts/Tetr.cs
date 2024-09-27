@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class Tetr : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+public enum Tetr {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    I,
+    O,
+    T,
+    J,
+    L,
+    S,
+    Z,
+}
+
+[System.Serializable]
+public struct TetrData {
+
+    public Tetr tetr;
+    public Tile tile;
+
 }

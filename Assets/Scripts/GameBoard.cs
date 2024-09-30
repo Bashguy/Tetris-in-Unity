@@ -7,6 +7,18 @@ public class GameBoard : MonoBehaviour {
     public TetrData[] tetrs;
     public Piece CurrPiece { get; private set; }
     public Vector3Int spawnPos;
+    public Vector2Int gameBoardSize = new Vector2Int(10, 20);
+
+    public RectInt Bound {
+
+        get {
+
+            Vector2Int pos = new(-gameBoardSize.x / 2, -gameBoardSize.y / 2);
+            return new RectInt(pos, gameBoardSize);
+
+        }
+
+    }
     private void Awake() {
 
         this.Tilemap = GetComponentInChildren<Tilemap>();
@@ -44,6 +56,43 @@ public class GameBoard : MonoBehaviour {
             this.Tilemap.SetTile(tilePos, piece.Data.tile);
 
         }
+
+    }
+
+    public void Clear(Piece piece) {
+
+        for (int i = 0; i < piece.Cells.Length; i++) {
+
+            Vector3Int tilePos = piece.Cells[i] + piece.Pos;
+            this.Tilemap.SetTile(tilePos, null);
+
+        }
+
+    }
+
+    public bool ValidPos(Piece piece, Vector3Int pos) {
+
+        RectInt bound = Bound;
+
+        for (int i = 0; i < piece.Cells.Length; i++) {
+
+            Vector3Int tilePos = piece.Cells[i] + pos;
+
+            if (!bound.Contains((Vector2Int)tilePos)) {
+                
+                return false;
+
+            }
+
+            if (this.Tilemap.HasTile(tilePos)) {
+
+                return false;
+
+            }
+
+        }
+
+        return true;
 
     }
     

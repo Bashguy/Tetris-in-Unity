@@ -17,12 +17,13 @@ public struct TetrData {
 
     public Tetr tetr;
     public Tile tile;
-
     public Vector2Int[] Cells {get; private set;}
+    public Vector2Int[,] WallKicks {get; private set;}
 
     public void Create() {
 
         this.Cells = Data.Cells[this.tetr];
+        this.WallKicks = Data.WallKicks[this.tetr];
 
     }
 

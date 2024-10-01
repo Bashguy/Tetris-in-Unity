@@ -7,7 +7,7 @@ public class GameBoard : MonoBehaviour {
     public TetrData[] tetrs;
     public Piece CurrPiece { get; private set; }
     public Vector3Int spawnPos;
-    public Vector2Int gameBoardSize = new Vector2Int(10, 20);
+    public Vector2Int gameBoardSize = new(10, 20);
 
     public RectInt Bound {
 
@@ -53,7 +53,7 @@ public class GameBoard : MonoBehaviour {
         for (int i = 0; i < piece.Cells.Length; i++) {
 
             Vector3Int tilePos = piece.Cells[i] + piece.Pos;
-            this.Tilemap.SetTile(tilePos, piece.Data.tile);
+            this.Tilemap.SetTile(tilePos, piece.data.tile);
 
         }
 

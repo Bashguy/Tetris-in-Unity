@@ -1,9 +1,11 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameBoard : MonoBehaviour {
 
-    public Tilemap Tilemap { get; private set; }
+    public Tilemap tilemap { get; private set; }
     public TetrData[] tetrs;
     public Piece CurrPiece { get; private set; }
     public Vector3Int spawnPos;
@@ -21,7 +23,7 @@ public class GameBoard : MonoBehaviour {
     }
     private void Awake() {
 
-        this.Tilemap = GetComponentInChildren<Tilemap>();
+        this.tilemap = GetComponentInChildren<Tilemap>();
         this.CurrPiece = GetComponentInChildren<Piece>();
 
         for (int i = 0; i < this.tetrs.Length; i++) {
@@ -36,6 +38,7 @@ public class GameBoard : MonoBehaviour {
 
         CreatePiece();
 
+
     }
 
     public void CreatePiece() {
@@ -44,8 +47,23 @@ public class GameBoard : MonoBehaviour {
         TetrData data = this.tetrs[rand];
 
         this.CurrPiece.Create(this, this.spawnPos, data);
-        Set(this.CurrPiece);
 
+        if(ValidPos(this.CurrPiece, this.spawnPos)) {
+
+            Set(this.CurrPiece);
+
+        } else {
+
+            GameOver();
+
+        }
+
+    }
+
+    private void GameOver() {
+
+        this.tilemap.ClearAllTiles();
+        
     }
 
     public void Set(Piece piece) {
@@ -53,7 +71,7 @@ public class GameBoard : MonoBehaviour {
         for (int i = 0; i < piece.Cells.Length; i++) {
 
             Vector3Int tilePos = piece.Cells[i] + piece.Pos;
-            this.Tilemap.SetTile(tilePos, piece.data.tile);
+            this.tilemap.SetTile(tilePos, piece.data.tile);
 
         }
 
@@ -64,7 +82,7 @@ public class GameBoard : MonoBehaviour {
         for (int i = 0; i < piece.Cells.Length; i++) {
 
             Vector3Int tilePos = piece.Cells[i] + piece.Pos;
-            this.Tilemap.SetTile(tilePos, null);
+            this.tilemap.SetTile(tilePos, null);
 
         }
 
@@ -84,7 +102,7 @@ public class GameBoard : MonoBehaviour {
 
             }
 
-            if (this.Tilemap.HasTile(tilePos)) {
+            if (this.tilemap.HasTile(tilePos)) {
 
                 return false;
 
@@ -95,5 +113,72 @@ public class GameBoard : MonoBehaviour {
         return true;
 
     }
-    
+
+    public void ClearLines()
+    {
+        RectInt bound = Bound;
+        int row = bound.yMin;
+
+        while (row < bound.yMax) {
+
+            if (CheckLine(row)) {
+
+                LineClear(row);
+
+            } else {
+
+                row++;
+
+            }
+
+        }
+
+    }
+
+    public bool CheckLine(int row)
+    {
+        RectInt bound = Bound;
+
+        for (int col = bound.xMin; col < bound.xMax; col++) {
+
+            Vector3Int position = new(col, row, 0);
+
+            if (!tilemap.HasTile(position)) {
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+    }
+
+    public void LineClear(int row) {
+
+        RectInt bound = Bound;
+
+        for (int col = bound.xMin; col < bound.xMax; col++) {
+
+            Vector3Int position = new(col, row, 0);
+            tilemap.SetTile(position, null);
+
+        }
+
+        while (row < bound.yMax) {
+
+            for (int col = bound.xMin; col < bound.xMax; col++)
+            {
+                Vector3Int position = new(col, row + 1, 0);
+                TileBase above = tilemap.GetTile(position);
+
+                position = new Vector3Int(col, row, 0);
+                tilemap.SetTile(position, above);
+            }
+
+            row++;
+        }
+
+    }
+
 }

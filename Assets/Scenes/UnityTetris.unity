@@ -216,6 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 379457363}
   - component: {fileID: 379457362}
+  - component: {fileID: 379457364}
   m_Layer: 0
   m_Name: GhostPiece
   m_TagString: Untagged
@@ -251,6 +252,21 @@ Transform:
   - {fileID: 611438145}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &379457364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379457361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b2836e1db7bad49aed1426f50f6f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile: {fileID: 11400000, guid: 689d94316bd58df42ae08a91f264ce71, type: 2}
+  board: {fileID: 707443356}
+  trackingPiece: {fileID: 707443357}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +554,7 @@ MonoBehaviour:
   - tetr: 6
     tile: {fileID: 11400000, guid: 6da5ea6331df17b43aa742b0e52e55ec, type: 2}
   spawnPos: {x: -1, y: 8, z: 0}
+  gameBoardSize: {x: 10, y: 20}
 --- !u!114 &707443357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,6 +567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae82ca5174e7f5248aaff2ab2a3f2ef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stepDelay: 0.5
+  lockDelay: 0.5
 --- !u!1 &877581856
 GameObject:
   m_ObjectHideFlags: 0

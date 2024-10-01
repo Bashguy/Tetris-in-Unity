@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,12 +13,18 @@ public class Piece : MonoBehaviour {
     public Vector3Int Pos { get; private set; }
     public Vector3Int[] Cells { get; private set; }
     public int RotationIndex { get; private set; }
+    public float stepDelay = 1f;
+    public float lockDelay = 0.5f;
+    private float stepTime;
+    private float lockTime;
     public void Create(GameBoard Board, Vector3Int Pos, TetrData data) {
 
         this.Board = Board;
         this.Pos = Pos;
         this.data = data;
         this.RotationIndex = 0;
+        this.stepTime = Time.time + this.stepDelay;
+        this.lockTime = 0f;
 
         if (this.Cells == null) {
             this.Cells = new Vector3Int[data.Cells.Length];
@@ -33,6 +41,8 @@ public class Piece : MonoBehaviour {
     private void Update() {
 
         this.Board.Clear(this);
+
+        this.lockTime += Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
 
@@ -62,7 +72,27 @@ public class Piece : MonoBehaviour {
 
         } 
 
+        if (Time.time >= this.stepTime) {
+
+            Step();
+
+        }
+
         this.Board.Set(this);
+
+    }
+
+    private void Step() {
+
+        this.stepTime = Time.time + this.stepDelay;
+
+        Move(Vector2Int.down);
+
+        if(this.lockTime >= this.lockDelay) {
+
+            Lock();
+
+        }
 
     }
 
@@ -73,6 +103,16 @@ public class Piece : MonoBehaviour {
             continue;
 
         }
+
+        Lock();
+
+    }
+
+    private void Lock() {
+
+        this.Board.Set(this);
+        this.Board.ClearLines();
+        this.Board.CreatePiece();
 
     }
 
@@ -87,6 +127,7 @@ public class Piece : MonoBehaviour {
         if (valid) {
 
             this.Pos = newPos;
+            this.lockTime = 0f;
 
         }
 
